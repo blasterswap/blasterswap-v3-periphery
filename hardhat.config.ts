@@ -12,7 +12,7 @@ const LOW_OPTIMIZER_COMPILER_SETTINGS = {
     evmVersion: 'istanbul',
     optimizer: {
       enabled: true,
-      runs: 2_000,
+      runs: 2_00,
     },
     metadata: {
       bytecodeHash: 'none',
@@ -60,6 +60,7 @@ export default {
   networks: {
     localhost: {
       accounts: [localhostAccount],
+      allowUnlimitedContractSize: true,
     },
     sepolia: {
       url: sepoliaURI,
@@ -92,10 +93,3 @@ export default {
     },
   },
 }
-
-
-// etherscan: {
-//   // Your API key for Etherscan
-//   // Obtain one at https://etherscan.io/
-//   apiKey: process.env.ETHERSCAN_API_KEY,
-// },

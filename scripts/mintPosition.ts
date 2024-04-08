@@ -40,10 +40,10 @@ const factoryAbi = [
 	}
 ];
 
-const npmAddress = "0x610178dA211FEF7D417bC0e6FeD39F05609AD788";
+const npmAddress = "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0";
 
-const erc20MockAddress = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9";
-const wethAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+const erc20MockAddress = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707";
+const wethAddress = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
 
 async function main() {
 	const npm = await hre.ethers.getContractAt("NonfungiblePositionManager", npmAddress)
