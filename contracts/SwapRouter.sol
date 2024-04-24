@@ -41,8 +41,8 @@ contract SwapRouter is
     IBlast private constant BLAST = IBlast(0x4300000000000000000000000000000000000002);
 
     constructor(address _factory, address _WETH9, address _admin) PeripheryImmutableState(_factory, _WETH9) {
-        BLAST.configureClaimableGas();
-        BLAST.configureGovernor(_admin);
+        // BLAST.configureClaimableGas();
+        // BLAST.configureGovernor(_admin);
     }
 
     /// @dev Returns the pool for the given token pair and fee. The pool contract may or may not exist.

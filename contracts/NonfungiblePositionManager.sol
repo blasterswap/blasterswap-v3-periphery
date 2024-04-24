@@ -79,8 +79,8 @@ contract NonfungiblePositionManager is
     ) ERC721Permit('Blasterswap V3 Positions NFT-V1', 'BLASTER-V3-POS', '1') PeripheryImmutableState(_factory, _WETH9) {
         _tokenDescriptor = _tokenDescriptor_;
 
-        BLAST.configureClaimableGas();
-        BLAST.configureGovernor(_admin);
+        // BLAST.configureClaimableGas();
+        // BLAST.configureGovernor(_admin);
     }
 
     /// @inheritdoc INonfungiblePositionManager

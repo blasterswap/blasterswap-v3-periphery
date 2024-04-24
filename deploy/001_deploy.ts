@@ -8,16 +8,16 @@ import ethers from 'ethers';
 const WETH9Address = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
 const nativeCurrencySymbol = "ETH";
 const v3CoreFactoryAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-const gasAdmin = ethers.ZeroAddress;
+// const gasAdmin = ethers.ZeroAddress;
 
 module.exports = async (hre: HardhatRuntimeEnvironment) => {
 	const { deploy } = deployments;
 	const { deployer } = await getNamedAccounts();
 	const [deployerSigner] = await hre.ethers.getSigners();
 
-	if (gasAdmin == ethers.ZeroAddress) {
-		throw new Error("gasAdmin address is not set");
-	}
+	// if (gasAdmin == ethers.ZeroAddress) {
+	// 	throw new Error("gasAdmin address is not set");
+	// }
 
 	const multicall = await deploy("BlasterswapInterfaceMulticall", {
 		from: deployer,
@@ -42,7 +42,7 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 
 	const nonfungibleTokenPositionDescriptor = await deploy("NonfungibleTokenPositionDescriptor", {
 		from: deployer,
-		args: [WETH9Address, asciiStringToBytes32(nativeCurrencySymbol), gasAdmin],
+		args: [WETH9Address, asciiStringToBytes32(nativeCurrencySymbol)],
 		log: true,
 		libraries: {
 			NFTDescriptor: nftDescriptor.address
@@ -57,7 +57,7 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 	const nonfungiblePositionManager = await deploy("NonfungiblePositionManager", {
 		from: deployer,
 		log: true,
-		args: [v3CoreFactoryAddress, WETH9Address, await nonfungibleTokenDescriptorProxy.getAddress()],
+		args: [v3CoreFactoryAddress, WETH9Address, await nonfungibleTokenDescriptorProxy.getAddress(), deployer],
 	});
 
 	const quoterV2 = await deploy("QuoterV2", {
@@ -69,7 +69,7 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 	const swapRouter = await deploy("SwapRouter", {
 		from: deployer,
 		log: true,
-		args: [v3CoreFactoryAddress, WETH9Address, gasAdmin],
+		args: [v3CoreFactoryAddress, WETH9Address, deployer],
 	});
 };
 
