@@ -16,6 +16,7 @@ import './libraries/Path.sol';
 import './libraries/PoolAddress.sol';
 import './libraries/CallbackValidation.sol';
 import './interfaces/external/IWETH9.sol';
+import './interfaces/IBlast.sol';
 
 /// @title Blasterswap V3 Swap Router
 /// @notice Router for stateless execution of swaps against Blasterswap V3
@@ -37,7 +38,12 @@ contract SwapRouter is
     /// @dev Transient storage variable used for returning the computed amount in for an exact output swap.
     uint256 private amountInCached = DEFAULT_AMOUNT_IN_CACHED;
 
-    constructor(address _factory, address _WETH9) PeripheryImmutableState(_factory, _WETH9) {}
+    IBlast private constant BLAST = IBlast(0x4300000000000000000000000000000000000002);
+
+    constructor(address _factory, address _WETH9, address _admin) PeripheryImmutableState(_factory, _WETH9) {
+        BLAST.configureClaimableGas();
+        BLAST.configureGovernor(_admin);
+    }
 
     /// @dev Returns the pool for the given token pair and fee. The pool contract may or may not exist.
     function getPool(address tokenA, address tokenB, uint24 fee) private view returns (IBlasterswapV3Pool) {
@@ -50,7 +56,11 @@ contract SwapRouter is
     }
 
     /// @inheritdoc IBlasterswapV3SwapCallback
-    function blasterswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata _data) external override {
+    function blasterswapV3SwapCallback(
+        int256 amount0Delta,
+        int256 amount1Delta,
+        bytes calldata _data
+    ) external override {
         require(amount0Delta > 0 || amount1Delta > 0); // swaps entirely within 0-liquidity regions are not supported
         SwapCallbackData memory data = abi.decode(_data, (SwapCallbackData));
         (address tokenIn, address tokenOut, uint24 fee) = data.path.decodeFirstPool();

@@ -3,15 +3,21 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { asciiStringToBytes32 } from './utils/utils';
 import ProxyAdmin from '@openzeppelin/contracts/build/contracts/ProxyAdmin.json'
 import TransparentProxy from '@openzeppelin/contracts/build/contracts/TransparentUpgradeableProxy.json';
+import ethers from 'ethers';
 
 const WETH9Address = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
 const nativeCurrencySymbol = "ETH";
 const v3CoreFactoryAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+const gasAdmin = ethers.ZeroAddress;
 
 module.exports = async (hre: HardhatRuntimeEnvironment) => {
 	const { deploy } = deployments;
 	const { deployer } = await getNamedAccounts();
 	const [deployerSigner] = await hre.ethers.getSigners();
+
+	if (gasAdmin == ethers.ZeroAddress) {
+		throw new Error("gasAdmin address is not set");
+	}
 
 	const multicall = await deploy("BlasterswapInterfaceMulticall", {
 		from: deployer,
@@ -36,7 +42,7 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 
 	const nonfungibleTokenPositionDescriptor = await deploy("NonfungibleTokenPositionDescriptor", {
 		from: deployer,
-		args: [WETH9Address, asciiStringToBytes32(nativeCurrencySymbol)],
+		args: [WETH9Address, asciiStringToBytes32(nativeCurrencySymbol), gasAdmin],
 		log: true,
 		libraries: {
 			NFTDescriptor: nftDescriptor.address
@@ -63,7 +69,7 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 	const swapRouter = await deploy("SwapRouter", {
 		from: deployer,
 		log: true,
-		args: [v3CoreFactoryAddress, WETH9Address],
+		args: [v3CoreFactoryAddress, WETH9Address, gasAdmin],
 	});
 };
 
