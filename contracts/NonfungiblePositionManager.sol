@@ -17,6 +17,7 @@ import './base/ERC721Permit.sol';
 import './base/PeripheryValidation.sol';
 import './base/SelfPermit.sol';
 import './base/PoolInitializer.sol';
+import './interfaces/IBlast.sol';
 
 /// @title NFT positions
 /// @notice Wraps Blasterswap V3 positions in the ERC721 non-fungible token interface
@@ -68,12 +69,18 @@ contract NonfungiblePositionManager is
     /// @dev The address of the token descriptor contract, which handles generating token URIs for position tokens
     address private immutable _tokenDescriptor;
 
+    IBlast private constant BLAST = IBlast(0x4300000000000000000000000000000000000002);
+
     constructor(
         address _factory,
         address _WETH9,
-        address _tokenDescriptor_
+        address _tokenDescriptor_,
+        address _admin
     ) ERC721Permit('Blasterswap V3 Positions NFT-V1', 'BLASTER-V3-POS', '1') PeripheryImmutableState(_factory, _WETH9) {
         _tokenDescriptor = _tokenDescriptor_;
+
+        BLAST.configureClaimableGas();
+        BLAST.configureGovernor(_admin);
     }
 
     /// @inheritdoc INonfungiblePositionManager
