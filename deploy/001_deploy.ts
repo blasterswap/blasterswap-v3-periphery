@@ -57,7 +57,7 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 	const nonfungiblePositionManager = await deploy("NonfungiblePositionManager", {
 		from: deployer,
 		log: true,
-		args: [v3CoreFactoryAddress, WETH9Address, await nonfungibleTokenDescriptorProxy.getAddress()],
+		args: [v3CoreFactoryAddress, WETH9Address, await nonfungibleTokenDescriptorProxy.getAddress(), deployer],
 	});
 
 	const quoterV2 = await deploy("QuoterV2", {
