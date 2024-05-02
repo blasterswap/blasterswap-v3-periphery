@@ -1,6 +1,7 @@
 import '@nomicfoundation/hardhat-ethers'
 import 'hardhat-typechain'
 import 'hardhat-deploy'
+import "@nomicfoundation/hardhat-verify";
 import { config as dotenvConfig } from 'dotenv';
 import { resolve } from 'path';
 import { Wallet } from 'ethers';
@@ -110,3 +111,20 @@ export default {
     },
   },
 }
+
+
+
+// deploying "BlasterswapInterfaceMulticall": 0x766a8ac9322526BAeF713A9a8e26DeaDaA3f770F
+// proxy deployed to: 0xF2Ea815B0bA6D6b564f14c6eAe7B6A7EEC580a9B
+// deploying "TickLens":0xEdcB941e34B7D4b0EcAF6A2FD8D2F051ad4955f5
+// deploying "NFTDescriptor":0x0C0E0Ce7592d93FC5861385a87A9A6d236385F19
+// deploying "NonfungibleTokenPositionDescriptor": 0x3f2939d2117B7a9900B616Db6159f8f68D85b315
+// TransparentUpgradeableProxy deployed to: 0x12Bf7475d8CCE779a2ec74E5bC7C9EF06961cb0B
+// BlasterswapInterfaceMulticall: 0x766a8ac9322526BAeF713A9a8e26DeaDaA3f770F
+// TickLens: 0xEdcB941e34B7D4b0EcAF6A2FD8D2F051ad4955f5
+// NFTDescriptor: 0x0C0E0Ce7592d93FC5861385a87A9A6d236385F19
+// NonfungibleTokenPositionDescriptor: 0x3f2939d2117B7a9900B616Db6159f8f68D85b315
+// NonfungiblePositionManager: 0x4b314C696211c8362e20b7a5363583feE7319410
+// V3Migrator: 0x2a9ee80b5893367E48F1C4C026220aC02b743463
+// QuoterV2: 0x3C95Ba0B70E57E717d09CACb48Ca9e110d1f25DE
+// SwapRouter: 0xee642de8695De7c36f1a8e4f5ED0CD21160ab1F2
