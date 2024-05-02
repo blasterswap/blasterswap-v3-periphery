@@ -3,7 +3,7 @@ import { HardhatRuntimeEnvironment } from 'hardhat/types';
 import { asciiStringToBytes32 } from './utils/utils';
 import ProxyAdmin from '@openzeppelin/contracts/build/contracts/ProxyAdmin.json'
 import TransparentProxy from '@openzeppelin/contracts/build/contracts/TransparentUpgradeableProxy.json';
-import ethers from 'ethers';
+import { ZeroAddress } from 'ethers';
 
 const WETH9Address = "0x4300000000000000000000000000000000000004";
 const nativeCurrencySymbol = "ETH";
@@ -15,7 +15,7 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 	const { deployer } = await getNamedAccounts();
 	const [deployerSigner] = await hre.ethers.getSigners();
 
-	if (gasAdmin == ethers.ZeroAddress) {
+	if (gasAdmin == ZeroAddress) {
 		throw new Error("gasAdmin address is not set");
 	}
 
