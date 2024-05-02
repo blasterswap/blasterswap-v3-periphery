@@ -60,6 +60,12 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 		args: [v3CoreFactoryAddress, WETH9Address, await nonfungibleTokenDescriptorProxy.getAddress(), gasAdmin],
 	});
 
+	const v3Migrator = await deploy("V3Migrator", {
+		from: deployer,
+		log: true,
+		args: [v3CoreFactoryAddress, WETH9Address, nonfungiblePositionManager.address],
+	});
+
 	const quoterV2 = await deploy("QuoterV2", {
 		from: deployer,
 		log: true,
