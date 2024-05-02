@@ -5,10 +5,10 @@ import ProxyAdmin from '@openzeppelin/contracts/build/contracts/ProxyAdmin.json'
 import TransparentProxy from '@openzeppelin/contracts/build/contracts/TransparentUpgradeableProxy.json';
 import ethers from 'ethers';
 
-const WETH9Address = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
+const WETH9Address = "0x4300000000000000000000000000000000000004";
 const nativeCurrencySymbol = "ETH";
-const v3CoreFactoryAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-const gasAdmin = ethers.ZeroAddress;
+const v3CoreFactoryAddress = "0x3762546c6041bb0f8e7de7910599242c3711a28c";
+const gasAdmin = "0x2AcF0a024a4Fd16E3A0CDDdB32FC229759290a1e";
 
 module.exports = async (hre: HardhatRuntimeEnvironment) => {
 	const { deploy } = deployments;
@@ -42,7 +42,7 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 
 	const nonfungibleTokenPositionDescriptor = await deploy("NonfungibleTokenPositionDescriptor", {
 		from: deployer,
-		args: [WETH9Address, asciiStringToBytes32(nativeCurrencySymbol), gasAdmin],
+		args: [WETH9Address, asciiStringToBytes32(nativeCurrencySymbol)],
 		log: true,
 		libraries: {
 			NFTDescriptor: nftDescriptor.address
@@ -57,7 +57,7 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 	const nonfungiblePositionManager = await deploy("NonfungiblePositionManager", {
 		from: deployer,
 		log: true,
-		args: [v3CoreFactoryAddress, WETH9Address, await nonfungibleTokenDescriptorProxy.getAddress(), deployer],
+		args: [v3CoreFactoryAddress, WETH9Address, await nonfungibleTokenDescriptorProxy.getAddress(), gasAdmin],
 	});
 
 	const quoterV2 = await deploy("QuoterV2", {
