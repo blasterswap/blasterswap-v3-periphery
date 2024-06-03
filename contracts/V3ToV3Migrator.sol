@@ -74,8 +74,10 @@ contract V3ToV3Migrator {
             })
         );
 
-        IERC20(token0).approve(nonfungiblePositionManagerOut, amount0ToMigrate);
-        IERC20(token1).approve(nonfungiblePositionManagerOut, amount1ToMigrate);
+        if (IERC20(token0).allowance(address(this), nonfungiblePositionManagerOut) == 0)
+            IERC20(token0).approve(nonfungiblePositionManagerOut, type(uint256).max);
+        if (IERC20(token1).allowance(address(this), nonfungiblePositionManagerOut) == 0)
+            IERC20(token1).approve(nonfungiblePositionManagerOut, type(uint256).max);
 
         INonfungiblePositionManager.MintParams memory mintParams = INonfungiblePositionManager.MintParams({
             token0: token0,

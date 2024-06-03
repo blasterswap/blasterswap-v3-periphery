@@ -5,10 +5,12 @@ import ProxyAdmin from '@openzeppelin/contracts/build/contracts/ProxyAdmin.json'
 import TransparentProxy from '@openzeppelin/contracts/build/contracts/TransparentUpgradeableProxy.json';
 import ethers from 'ethers';
 
-const WETH9Address = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
+const WETH9Address = "0x4300000000000000000000000000000000000004";
 const nativeCurrencySymbol = "ETH";
-const v3CoreFactoryAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-const gasAdmin = ethers.ZeroAddress;
+const v3CoreFactoryAddress = "0xb7a92633Bc7074c8216Dc53566fD58A77b5D32D9";
+const v3ThrusterPositionManagerAddress = "0x434575eaea081b735c985fa9bf63cd7b87e227f9";
+const v2FactoryAddress = "0x9CC1599D4378Ea41d444642D18AA9Be44f709ffD";
+const gasAdmin = "0xba99b8a284f45447929a143dc2efa5bcfe7ade60";
 
 module.exports = async (hre: HardhatRuntimeEnvironment) => {
 	const { deploy } = deployments;
@@ -71,6 +73,20 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 		log: true,
 		args: [v3CoreFactoryAddress, WETH9Address, gasAdmin],
 	});
+
+
+	const v3Migrator = await deploy("V3Migrator", {
+		from: deployer,
+		log: true,
+		args: [v2FactoryAddress, WETH9Address, nonfungiblePositionManager.address],
+	});
+
+	const v3ToV3Migrator = await deploy("V3ToV3Migrator", {
+		from: deployer,
+		log: true,
+		args: [v3ThrusterPositionManagerAddress, nonfungiblePositionManager.address],
+	});
+
 };
 
 module.exports.tags = ['Periphery'];
