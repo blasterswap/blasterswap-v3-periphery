@@ -4,6 +4,14 @@ import 'hardhat-deploy'
 import { config as dotenvConfig } from 'dotenv';
 import { resolve } from 'path';
 
+const blastURL = process.env.BLAST_RPC_URL || '';
+const ethSepoliaURL = process.env.SEPOLIA_RPC_URL || '';
+const localURL = 'http://localhost:8545';
+
+const mnemonic = process.env.BLAST_PRIVATE_KEY || '';
+
+const blastScanAPIKey = process.env.BLASTSCAN_API_KEY || '';
+const ethSepoliaScanAPIKey = process.env.ETHERSCAN_API_KEY_ETH_SEPOLIA || '';
 const localhostAccount = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
 const LOW_OPTIMIZER_COMPILER_SETTINGS = {
@@ -51,29 +59,38 @@ const DEFAULT_COMPILER_SETTINGS = {
 
 dotenvConfig({ path: resolve(__dirname, './.env') });
 
-const blastURI = process.env.BLAST_URI || '';
-const sepoliaURI = process.env.SEPOLIA_URI || '';
-const mnemonic = process.env.MNEMONIC || '';
-const localURI = 'http://localhost:8545';
-
 export default {
   networks: {
     localhost: {
       accounts: [localhostAccount],
       allowUnlimitedContractSize: true,
     },
-    sepolia: {
-      url: sepoliaURI,
-      allowUnlimitedContractSize: false,
+    blast: {
+      url: blastURL,
       accounts: {
         mnemonic: mnemonic,
       },
-    }
+    },
   },
   namedAccounts: {
     deployer: {
       default: 0,
     }
+  },
+  etherscan: {
+    apiKey: {
+      blast: blastScanAPIKey,
+    },
+    customChains: [
+      {
+        network: "blast",
+        chainId: 81457,
+        urls: {
+          apiURL: "https://api.blastscan.io/api",
+          browserURL: "https://blastscan.io/"
+        }
+      }
+    ]
   },
   solidity: {
     compilers: [DEFAULT_COMPILER_SETTINGS],
