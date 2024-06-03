@@ -10,7 +10,7 @@ import './interfaces/INonfungiblePositionManager.sol';
 import './libraries/TransferHelper.sol';
 
 contract V3ToV3Migrator {
-    event StolenFromThruster(
+    event LiquidityMigrated(
         address indexed sender,
         address token0,
         address token1,
@@ -32,7 +32,7 @@ contract V3ToV3Migrator {
      * @param amount0Min minimum amount of token0 to receive from decresing liquidity adjusted for slippage
      * @param amount1Min minimum amount of token1 to receive from decresing liquidity adjusted for slippage
      */
-    function stealLiquidityFromThruster(uint _inPositionTokenId, uint amount0Min, uint amount1Min) external {
+    function migrateLiquidityToBlaster(uint _inPositionTokenId, uint amount0Min, uint amount1Min) external {
         (
             ,
             ,
@@ -103,6 +103,6 @@ contract V3ToV3Migrator {
             IERC20(token1).transfer(msg.sender, IERC20(token1).balanceOf(address(this)));
         }
 
-        emit StolenFromThruster(address(msg.sender), token0, token1, amount0ToMigrate, amount1ToMigrate);
+        emit LiquidityMigrated(address(msg.sender), token0, token1, amount0ToMigrate, amount1ToMigrate);
     }
 }
