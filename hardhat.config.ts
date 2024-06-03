@@ -1,4 +1,5 @@
 import '@nomicfoundation/hardhat-ethers'
+import '@nomicfoundation/hardhat-verify';
 import 'hardhat-typechain'
 import 'hardhat-deploy'
 import { config as dotenvConfig } from 'dotenv';
