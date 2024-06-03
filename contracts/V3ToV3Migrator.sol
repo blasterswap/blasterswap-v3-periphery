@@ -93,9 +93,7 @@ contract V3ToV3Migrator {
             deadline: block.timestamp
         });
 
-        (uint256 tokenId, , uint256 amount0, uint256 amount1) = INonfungiblePositionManager(
-            nonfungiblePositionManagerOut
-        ).mint(mintParams);
+        INonfungiblePositionManager(nonfungiblePositionManagerOut).mint(mintParams);
 
         if (IERC20(token0).balanceOf(address(this)) > 0) {
             IERC20(token0).transfer(msg.sender, IERC20(token0).balanceOf(address(this)));

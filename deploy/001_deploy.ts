@@ -17,9 +17,7 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 	const { deployer } = await getNamedAccounts();
 	const [deployerSigner] = await hre.ethers.getSigners();
 
-	if (gasAdmin == ethers.ZeroAddress) {
-		throw new Error("gasAdmin address is not set");
-	}
+	console.log(`deploying with: ${deployer}`);
 
 	const multicall = await deploy("BlasterswapInterfaceMulticall", {
 		from: deployer,

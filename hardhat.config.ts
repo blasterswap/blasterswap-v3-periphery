@@ -4,6 +4,8 @@ import 'hardhat-deploy'
 import { config as dotenvConfig } from 'dotenv';
 import { resolve } from 'path';
 
+dotenvConfig({ path: resolve(__dirname, './.env') });
+
 const blastURL = process.env.BLAST_RPC_URL || '';
 const ethSepoliaURL = process.env.SEPOLIA_RPC_URL || '';
 const localURL = 'http://localhost:8545';
@@ -55,7 +57,6 @@ const DEFAULT_COMPILER_SETTINGS = {
     },
   },
 }
-
 
 dotenvConfig({ path: resolve(__dirname, './.env') });
 
