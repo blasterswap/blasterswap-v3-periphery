@@ -42,7 +42,7 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 
 	const nonfungibleTokenPositionDescriptor = await deploy("NonfungibleTokenPositionDescriptor", {
 		from: deployer,
-		args: [WETH9Address, asciiStringToBytes32(nativeCurrencySymbol), gasAdmin],
+		args: [WETH9Address, asciiStringToBytes32(nativeCurrencySymbol)],
 		log: true,
 		libraries: {
 			NFTDescriptor: nftDescriptor.address
@@ -57,7 +57,7 @@ module.exports = async (hre: HardhatRuntimeEnvironment) => {
 	const nonfungiblePositionManager = await deploy("NonfungiblePositionManager", {
 		from: deployer,
 		log: true,
-		args: [v3CoreFactoryAddress, WETH9Address, await nonfungibleTokenDescriptorProxy.getAddress(), deployer],
+		args: [v3CoreFactoryAddress, WETH9Address, await nonfungibleTokenDescriptorProxy.getAddress(), gasAdmin],
 	});
 
 	const quoterV2 = await deploy("QuoterV2", {
