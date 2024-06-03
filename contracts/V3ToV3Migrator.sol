@@ -85,9 +85,9 @@ contract V3ToV3Migrator {
             tickLower: tickLower,
             tickUpper: tickUpper,
             amount0Desired: amount0ToMigrate,
-            amount1Desired: amount0ToMigrate,
+            amount1Desired: amount1ToMigrate,
             amount0Min: amount0Min,
-            amount1Min: amount0Min,
+            amount1Min: amount1Min,
             deadline: block.timestamp
         });
 
