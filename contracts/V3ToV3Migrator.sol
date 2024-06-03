@@ -59,8 +59,8 @@ contract V3ToV3Migrator {
                 INonfungiblePositionManager.DecreaseLiquidityParams({
                     tokenId: _inPositionTokenId,
                     liquidity: liquidity,
-                    amount0Min: amount0Min,
-                    amount1Min: amount1Min,
+                    amount0Min: 0,
+                    amount1Min: 0,
                     deadline: block.timestamp
                 })
             );
@@ -74,8 +74,8 @@ contract V3ToV3Migrator {
             })
         );
 
-        IERC20(token0).approve(nonfungiblePositionManagerIn, amount0ToMigrate);
-        IERC20(token1).approve(nonfungiblePositionManagerIn, amount1ToMigrate);
+        IERC20(token0).approve(nonfungiblePositionManagerOut, amount0ToMigrate);
+        IERC20(token1).approve(nonfungiblePositionManagerOut, amount1ToMigrate);
 
         INonfungiblePositionManager.MintParams memory mintParams = INonfungiblePositionManager.MintParams({
             token0: token0,
@@ -86,14 +86,22 @@ contract V3ToV3Migrator {
             tickUpper: tickUpper,
             amount0Desired: amount0ToMigrate,
             amount1Desired: amount0ToMigrate,
-            amount0Min: amount0ToMigrate,
-            amount1Min: amount0ToMigrate,
+            amount0Min: amount0Min,
+            amount1Min: amount0Min,
             deadline: block.timestamp
         });
 
         (uint256 tokenId, , uint256 amount0, uint256 amount1) = INonfungiblePositionManager(
             nonfungiblePositionManagerOut
         ).mint(mintParams);
+
+        if (IERC20(token0).balanceOf(address(this)) > 0) {
+            IERC20(token0).transfer(msg.sender, IERC20(token0).balanceOf(address(this)));
+        }
+
+        if (IERC20(token1).balanceOf(address(this)) > 0) {
+            IERC20(token1).transfer(msg.sender, IERC20(token1).balanceOf(address(this)));
+        }
 
         emit StolenFromThruster(address(msg.sender), token0, token1, amount0ToMigrate, amount1ToMigrate);
     }
