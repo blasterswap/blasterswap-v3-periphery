@@ -68,7 +68,7 @@ contract V3ToV3Migrator {
         INonfungiblePositionManager(nonfungiblePositionManagerIn).collect(
             INonfungiblePositionManager.CollectParams({
                 tokenId: _inPositionTokenId,
-                recipient: address(msg.sender),
+                recipient: address(this),
                 amount0Max: type(uint128).max,
                 amount1Max: type(uint128).max
             })
