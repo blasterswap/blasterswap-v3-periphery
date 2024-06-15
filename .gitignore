@@ -1,5 +1,7 @@
 artifacts/
 cache/
+scripts/
+main.py/
 crytic-export/
 node_modules/
 typechain/
