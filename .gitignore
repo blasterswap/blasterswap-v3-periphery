@@ -2,7 +2,7 @@ artifacts/
 cache/
 scripts/
 main.py
-.DS_Store/
+.DS_Store
 crytic-export/
 node_modules/
 typechain/
