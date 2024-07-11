@@ -29,11 +29,7 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
 
     constructor(address _factory, address _WETH9) PeripheryImmutableState(_factory, _WETH9) {}
 
-    function getPool(
-        address tokenA,
-        address tokenB,
-        uint24 fee
-    ) private view returns (IBlasterswapV3Pool) {
+    function getPool(address tokenA, address tokenB, uint24 fee) private view returns (IBlasterswapV3Pool) {
         return IBlasterswapV3Pool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
     }
 
@@ -47,10 +43,9 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
         (address tokenIn, address tokenOut, uint24 fee) = path.decodeFirstPool();
         CallbackValidation.verifyCallback(factory, tokenIn, tokenOut, fee);
 
-        (bool isExactInput, uint256 amountToPay, uint256 amountReceived) =
-            amount0Delta > 0
-                ? (tokenIn < tokenOut, uint256(amount0Delta), uint256(-amount1Delta))
-                : (tokenOut < tokenIn, uint256(amount1Delta), uint256(-amount0Delta));
+        (bool isExactInput, uint256 amountToPay, uint256 amountReceived) = amount0Delta > 0
+            ? (tokenIn < tokenOut, uint256(amount0Delta), uint256(-amount1Delta))
+            : (tokenOut < tokenIn, uint256(amount1Delta), uint256(-amount0Delta));
 
         IBlasterswapV3Pool pool = getPool(tokenIn, tokenOut, fee);
         (uint160 sqrtPriceX96After, int24 tickAfter, , , , , ) = pool.slot0();
@@ -77,15 +72,9 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
     }
 
     /// @dev Parses a revert reason that should contain the numeric quote
-    function parseRevertReason(bytes memory reason)
-        private
-        pure
-        returns (
-            uint256 amount,
-            uint160 sqrtPriceX96After,
-            int24 tickAfter
-        )
-    {
+    function parseRevertReason(
+        bytes memory reason
+    ) private pure returns (uint256 amount, uint160 sqrtPriceX96After, int24 tickAfter) {
         if (reason.length != 96) {
             if (reason.length < 68) revert('Unexpected error');
             assembly {
@@ -100,16 +89,7 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
         bytes memory reason,
         IBlasterswapV3Pool pool,
         uint256 gasEstimate
-    )
-        private
-        view
-        returns (
-            uint256 amount,
-            uint160 sqrtPriceX96After,
-            uint32 initializedTicksCrossed,
-            uint256
-        )
-    {
+    ) private view returns (uint256 amount, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256) {
         int24 tickBefore;
         int24 tickAfter;
         (, tickBefore, , , , , ) = pool.slot0();
@@ -120,15 +100,12 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
         return (amount, sqrtPriceX96After, initializedTicksCrossed, gasEstimate);
     }
 
-    function quoteExactInputSingle(QuoteExactInputSingleParams memory params)
+    function quoteExactInputSingle(
+        QuoteExactInputSingleParams memory params
+    )
         public
         override
-        returns (
-            uint256 amountOut,
-            uint160 sqrtPriceX96After,
-            uint32 initializedTicksCrossed,
-            uint256 gasEstimate
-        )
+        returns (uint256 amountOut, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256 gasEstimate)
     {
         bool zeroForOne = params.tokenIn < params.tokenOut;
         IBlasterswapV3Pool pool = getPool(params.tokenIn, params.tokenOut, params.fee);
@@ -150,7 +127,10 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
         }
     }
 
-    function quoteExactInput(bytes memory path, uint256 amountIn)
+    function quoteExactInput(
+        bytes memory path,
+        uint256 amountIn
+    )
         public
         override
         returns (
@@ -168,8 +148,12 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
             (address tokenIn, address tokenOut, uint24 fee) = path.decodeFirstPool();
 
             // the outputs of prior swaps become the inputs to subsequent ones
-            (uint256 _amountOut, uint160 _sqrtPriceX96After, uint32 _initializedTicksCrossed, uint256 _gasEstimate) =
-                quoteExactInputSingle(
+            (
+                uint256 _amountOut,
+                uint160 _sqrtPriceX96After,
+                uint32 _initializedTicksCrossed,
+                uint256 _gasEstimate
+            ) = quoteExactInputSingle(
                     QuoteExactInputSingleParams({
                         tokenIn: tokenIn,
                         tokenOut: tokenOut,
@@ -194,15 +178,12 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
         }
     }
 
-    function quoteExactOutputSingle(QuoteExactOutputSingleParams memory params)
+    function quoteExactOutputSingle(
+        QuoteExactOutputSingleParams memory params
+    )
         public
         override
-        returns (
-            uint256 amountIn,
-            uint160 sqrtPriceX96After,
-            uint32 initializedTicksCrossed,
-            uint256 gasEstimate
-        )
+        returns (uint256 amountIn, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256 gasEstimate)
     {
         bool zeroForOne = params.tokenIn < params.tokenOut;
         IBlasterswapV3Pool pool = getPool(params.tokenIn, params.tokenOut, params.fee);
@@ -227,7 +208,10 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
         }
     }
 
-    function quoteExactOutput(bytes memory path, uint256 amountOut)
+    function quoteExactOutput(
+        bytes memory path,
+        uint256 amountOut
+    )
         public
         override
         returns (
@@ -245,8 +229,12 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
             (address tokenOut, address tokenIn, uint24 fee) = path.decodeFirstPool();
 
             // the inputs of prior swaps become the outputs of subsequent ones
-            (uint256 _amountIn, uint160 _sqrtPriceX96After, uint32 _initializedTicksCrossed, uint256 _gasEstimate) =
-                quoteExactOutputSingle(
+            (
+                uint256 _amountIn,
+                uint160 _sqrtPriceX96After,
+                uint32 _initializedTicksCrossed,
+                uint256 _gasEstimate
+            ) = quoteExactOutputSingle(
                     QuoteExactOutputSingleParams({
                         tokenIn: tokenIn,
                         tokenOut: tokenOut,
@@ -267,6 +255,45 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
                 path = path.skipToken();
             } else {
                 return (amountOut, sqrtPriceX96AfterList, initializedTicksCrossedList, gasEstimate);
+            }
+        }
+    }
+
+    function quoteExactOutputMultiple(
+        bytes[] memory paths,
+        uint256[] memory amountsOut
+    ) public returns (uint256[] memory amountsIn) {
+        amountsIn = new uint256[](amountsOut.length);
+
+        for (uint k = 0; k < paths.length; k++) {
+            uint256 i = 0;
+            uint256 amountOut = amountsOut[k];
+            bytes memory path = paths[k];
+
+            while (true) {
+                (address tokenOut, address tokenIn, uint24 fee) = path.decodeFirstPool();
+
+                // the inputs of prior swaps become the outputs of subsequent ones
+                (uint256 _amountIn, , , ) = quoteExactOutputSingle(
+                    QuoteExactOutputSingleParams({
+                        tokenIn: tokenIn,
+                        tokenOut: tokenOut,
+                        amount: amountOut,
+                        fee: fee,
+                        sqrtPriceLimitX96: 0
+                    })
+                );
+
+                amountOut = _amountIn;
+                i++;
+
+                // decide whether to continue or terminate
+                if (path.hasMultiplePools()) {
+                    path = path.skipToken();
+                } else {
+                    amountsIn[i] = amountOut;
+                    break;
+                }
             }
         }
     }
