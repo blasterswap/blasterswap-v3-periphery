@@ -291,7 +291,46 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
                 if (path.hasMultiplePools()) {
                     path = path.skipToken();
                 } else {
-                    amountsIn[i] = amountOut;
+                    amountsIn[k] = amountOut;
+                    break;
+                }
+            }
+        }
+    }
+
+    function quoteExactInput(
+        bytes[] memory paths,
+        uint256[] memory amountsIn
+    ) public returns (uint256[] memory amountsOut) {
+        amountsIn = new uint256[](amountsOut.length);
+
+        for (uint k = 0; k < paths.length; k++) {
+            uint256 i = 0;
+            uint256 amountIn = amountsIn[k];
+            bytes memory path = paths[k];
+
+            while (true) {
+                (address tokenIn, address tokenOut, uint24 fee) = path.decodeFirstPool();
+
+                // the outputs of prior swaps become the inputs to subsequent ones
+                (uint256 _amountOut, , , ) = quoteExactInputSingle(
+                    QuoteExactInputSingleParams({
+                        tokenIn: tokenIn,
+                        tokenOut: tokenOut,
+                        fee: fee,
+                        amountIn: amountIn,
+                        sqrtPriceLimitX96: 0
+                    })
+                );
+
+                amountIn = _amountOut;
+                i++;
+
+                // decide whether to continue or terminate
+                if (path.hasMultiplePools()) {
+                    path = path.skipToken();
+                } else {
+                    amountsOut[k] = amountIn;
                     break;
                 }
             }
