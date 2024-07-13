@@ -76,11 +76,7 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
         bytes memory reason
     ) private pure returns (uint256 amount, uint160 sqrtPriceX96After, int24 tickAfter) {
         if (reason.length != 96) {
-            if (reason.length < 68) revert('Unexpected error');
-            assembly {
-                reason := add(reason, 0x04)
-            }
-            revert(abi.decode(reason, (string)));
+            return (0, 0, 0);
         }
         return abi.decode(reason, (uint256, uint160, int24));
     }
@@ -298,7 +294,7 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
         }
     }
 
-    function quoteExactInput(
+    function quoteExactInputMultiple(
         bytes[] memory paths,
         uint256[] memory amountsIn
     ) public returns (uint256[] memory amountsOut) {
