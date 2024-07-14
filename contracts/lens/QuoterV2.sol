@@ -298,7 +298,7 @@ contract QuoterV2 is IQuoterV2, IBlasterswapV3SwapCallback, PeripheryImmutableSt
         bytes[] memory paths,
         uint256[] memory amountsIn
     ) public returns (uint256[] memory amountsOut) {
-        amountsIn = new uint256[](amountsOut.length);
+        amountsOut = new uint256[](amountsIn.length);
 
         for (uint k = 0; k < paths.length; k++) {
             uint256 i = 0;
