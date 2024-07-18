@@ -1,52 +1,12 @@
-# Uniswap V3 Periphery
+# Blasterswap V3 Periphery
 
-[![Tests](https://github.com/Uniswap/uniswap-v3-periphery/workflows/Tests/badge.svg)](https://github.com/Uniswap/uniswap-v3-periphery/actions?query=workflow%3ATests)
-[![Lint](https://github.com/Uniswap/uniswap-v3-periphery/workflows/Lint/badge.svg)](https://github.com/Uniswap/uniswap-v3-periphery/actions?query=workflow%3ALint)
+## Addresses
 
-This repository contains the periphery smart contracts for the Uniswap V3 Protocol.
-For the lower level core contracts, see the [uniswap-v3-core](https://github.com/Uniswap/uniswap-v3-core)
-repository.
-
-## Bug bounty
-
-This repository is subject to the Uniswap V3 bug bounty program,
-per the terms defined [here](./bug-bounty.md).
-
-## Local deployment
-
-In order to deploy this code to a local testnet, you should install the npm package
-`@uniswap/v3-periphery`
-and import bytecode imported from artifacts located at
-`@uniswap/v3-periphery/artifacts/contracts/*/*.json`.
-For example:
-
-```typescript
-import {
-  abi as SWAP_ROUTER_ABI,
-  bytecode as SWAP_ROUTER_BYTECODE,
-} from '@uniswap/v3-periphery/artifacts/contracts/SwapRouter.sol/SwapRouter.json'
-
-// deploy the bytecode
-```
-
-This will ensure that you are testing against the same bytecode that is deployed to
-mainnet and public testnets, and all Uniswap code will correctly interoperate with
-your local deployment.
-
-## Using solidity interfaces
-
-The Uniswap v3 periphery interfaces are available for import into solidity smart contracts
-via the npm artifact `@uniswap/v3-periphery`, e.g.:
-
-```solidity
-import '@uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol';
-
-contract MyContract {
-  ISwapRouter router;
-
-  function doSomethingWithSwapRouter() {
-    // router.exactInput(...);
-  }
-}
-
-```
+- NFTDescriptor: 0x779E43Fc329EAb070ECA168E366a383e5bE96a50
+- NonfungiblePositionManager: 0x1e60C4113C86231Ef4b5B0b1cbf689F1b30e7966
+- BlasterswapInterfaceMulticall: 0xD9c03134c8096768aA36B5D9688bE288bcC412aC
+- NonfungibleTokenPositionDescriptor: 0xC460a8a091d6BBacd8490601FFE0b2cd1f76FDda
+- SwapRouter: 0x9201Ae24816d1c981319f79B8122652fd519A414
+- TickLens: 0x0Fd12Ae5687dF54a93F2B771aDe406acc2dB8D15
+- V3Migrator: 0x30288305850E276f7328C4C3b536a9EaCee382a1
+- V3ToV3Migrator: 0x9083eB4437c00de47D139Cc44d7fb3Db537A9E34
